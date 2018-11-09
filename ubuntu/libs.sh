@@ -179,4 +179,7 @@ if [ "$run" = "" ]; then
     cd fbthrift/thrift/lib/py
     sudo python setup.py install
     cd -
+    cd fbthrift/thrift/test/py
+    python -m test
+    cd -
 fi

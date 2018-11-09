@@ -30,3 +30,5 @@ sudo make altinstall
 update-alternatives --list python
 sudo update-alternatives --install /usr/bin/python python /usr/local/bin/python3.7 1
 update-alternatives --list python
+
+sudo pip3 install future six

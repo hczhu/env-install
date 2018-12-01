@@ -18,6 +18,16 @@ function add_glog_cmake_dep() {
   mv -f $tmp_file $cmake_file
 }
 
+function git_clone() {
+    repo=$1
+    name=$(echo $repo | sed 's#.*/\([^/.]\+\).git$#\1#;')
+    git clone $repo || (
+        cd $name &&
+        git pull &&
+        cd ..
+    )
+}
+
 
 if [ "$run" = "apt" ]; then run=""; fi
 if [ "$run" = "" ]; then
@@ -47,7 +57,7 @@ fi
 
 if [ "$run" = "jemalloc" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/jemalloc/jemalloc.git
+    git_clone https://github.com/jemalloc/jemalloc.git
     cd jemalloc
     ./autogen.sh
     make
@@ -91,7 +101,7 @@ fi
 
 if [ "$run" = "mstch" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/no1msd/mstch
+    git_clone https://github.com/no1msd/mstch
     cd mstch
     mkdir build
     cd build
@@ -104,7 +114,7 @@ fi
 
 if [ "$run" = "double" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/google/double-conversion.git
+    git_clone https://github.com/google/double-conversion.git
     cd double-conversion
     sudo scons install
     cd ..
@@ -112,7 +122,7 @@ fi
 
 if [ "$run" = "gflags" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/gflags/gflags.git
+    git_clone https://github.com/gflags/gflags.git
     cd gflags
     cmake . && make && sudo make install
     rm -fr CMakeCache.txt && cmake . -DBUILD_SHARED_LIBS=ON && make && sudo make install
@@ -122,7 +132,7 @@ fi
 
 if [ "$run" = "glog" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/google/glog.git
+    git_clone https://github.com/google/glog.git
     cd glog
     cmake . && make && sudo make install
     rm -fr CMakeCache.txt && cmake . -DBUILD_SHARED_LIBS=ON && make && sudo make install
@@ -131,7 +141,7 @@ fi
 
 if [ "$run" = "gtest" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/abseil/googletest.git
+    git_clone https://github.com/abseil/googletest.git
     cd googletest
     cmake . && make && sudo make install
     cd ..
@@ -139,7 +149,7 @@ fi
 
 if [ "$run" = "folly" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/facebook/folly
+    git_clone https://github.com/facebook/folly
     cd folly
     
     # add -fPIC to CMake/FollyCompilerUnix.cmake
@@ -152,7 +162,7 @@ fi
 
 if [ "$run" = "fizz" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/facebookincubator/fizz
+    git_clone https://github.com/facebookincubator/fizz
     mkdir fizz/build_ && cd fizz/build_
     add_glog_cmake_dep ../fizz
     cmake ../fizz
@@ -163,26 +173,14 @@ fi
 
 if [ "$run" = "zstd" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/facebook/zstd.git
+    git_clone https://github.com/facebook/zstd.git
     cd zstd && make && sudo make install && make check && cd ..
 fi
     
 
-if [ "$run" = "wangle" ]; then run=""; fi
-if [ "$run" = "" ]; then
-    git clone https://github.com/facebook/wangle.git
-    cd wangle/wangle
-    add_glog_cmake_dep .
-    cmake .
-      make && \
-      ctest && \
-      sudo make install
-    cd ../..
-fi
-
 if [ "$run" = "rsocket" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/rsocket/rsocket-cpp.git
+    git_clone https://github.com/rsocket/rsocket-cpp.git
     cd rsocket-cpp
     mkdir -p build
     cd build
@@ -190,14 +188,28 @@ if [ "$run" = "" ]; then
     # Append '-ldl -levent -lboost_context -ldouble-conversion -lgflags -lboost_regex' after '-fuse-ld=' in CMakeList.txt
     cmake ../
     make
+    sudo make install
     # ./tests
+    cd ../..
+fi
+
+if [ "$run" = "wangle" ]; then run=""; fi
+if [ "$run" = "" ]; then
+    git_clone https://github.com/facebook/wangle.git
+    cd wangle/wangle
+    add_glog_cmake_dep .
+    cmake .
+      make
+      # ctest
+      sudo make install
     cd ../..
 fi
     
 if [ "$run" = "fbthrift" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/facebook/fbthrift.git
+    git_clone https://github.com/facebook/fbthrift.git
     cd fbthrift/build
+    add_glog_cmake_dep ..
     cmake ..
     make
     sudo make install
@@ -212,7 +224,7 @@ fi
 
 if [ "$run" = "proxygen" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    git clone https://github.com/facebook/proxygen.git
+    git_clone https://github.com/facebook/proxygen.git
     cd proxygen/proxygen
     autoreconf -ivf && ./configure && make && sudo make install
     cd ../..

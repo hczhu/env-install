@@ -4,6 +4,20 @@ set -xe
 
 run=$1
 
+function add_glog_cmake_dep() {
+  set -xe
+  path=$1
+  cmake_file=${path}/CMakeLists.txt
+  head=$(grep -n 'find_package' $cmake_file | head -n1 | cut -d':' -f1)
+  total=$(wc -l $cmake_file | cut -d' ' -f1)
+  tail=$((total - head))
+  tmp_file=/tmp/.xxxxx.cmake
+  head -n${head} $cmake_file > $tmp_file
+  echo 'find_package(glog REQUIRED CONFIG NAMES google-glog glog)' >> $tmp_file
+  tail -n${tail} $cmake_file >> $tmp_file
+  mv -f $tmp_file $cmake_file
+}
+
 
 if [ "$run" = "apt" ]; then run=""; fi
 if [ "$run" = "" ]; then
@@ -31,6 +45,16 @@ if [ "$run" = "" ]; then
         libdwarf-dev
 fi
 
+if [ "$run" = "jemalloc" ]; then run=""; fi
+if [ "$run" = "" ]; then
+    git clone https://github.com/jemalloc/jemalloc.git
+    cd jemalloc
+    ./autogen.sh
+    make
+    sudo make install
+    cd ..
+fi
+
 if [ "$run" = "zlib" ]; then run=""; fi
 if [ "$run" = "" ]; then
     wget https://zlib.net/zlib-1.2.11.tar.gz
@@ -51,6 +75,17 @@ if [ "$run" = "" ]; then
     make && \
     sudo make install && \
     make clean && \
+    cd ..
+fi
+
+if [ "$run" = "curl" ]; then run=""; fi
+if [ "$run" = "" ]; then
+    wget https://curl.haxx.se/download/curl-7.59.0.tar.gz
+    tar xvf curl-7.59.0.tar.gz
+    cd curl-7.59.0/
+    cmake .
+    make
+    sudo make install
     cd ..
 fi
 
@@ -85,52 +120,63 @@ if [ "$run" = "" ]; then
     cd ..
 fi
 
+if [ "$run" = "glog" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git clone https://github.com/google/glog.git
     cd glog
     cmake . && make && sudo make install
     rm -fr CMakeCache.txt && cmake . -DBUILD_SHARED_LIBS=ON && make && sudo make install
     cd ..
-    
+fi
+
+if [ "$run" = "gtest" ]; then run=""; fi
+if [ "$run" = "" ]; then
+    git clone https://github.com/abseil/googletest.git
+    cd googletest
+    cmake . && make && sudo make install
+    cd ..
+fi
+
+if [ "$run" = "folly" ]; then run=""; fi
+if [ "$run" = "" ]; then
     git clone https://github.com/facebook/folly
     cd folly
-    wget https://github.com/google/googletest/archive/release-1.8.0.tar.gz && \
-      tar zxf release-1.8.0.tar.gz && \
-      rm -f release-1.8.0.tar.gz && \
-      cd googletest-release-1.8.0 && \
-      cmake configure . && \
-      make && \
-      sudo make install && \
-      cd ..
-    
-    cmake configure . && \
-      make -j $(nproc) && \
-      sudo make install
-    
-    rm -fr CMakeCache.txt && cmake configure . -DBUILD_SHARED_LIBS=ON && \
-      make -j $(nproc) && \
-      sudo make install
     
     # add -fPIC to CMake/FollyCompilerUnix.cmake
-    cmake configure . && \
-      make folly_fingerprint && \
-      sudo cp -f libfolly_fingerprint.a /usr/local/lib/libfolly_fingerprint.a  
+    sed -i 's/-fsigned-char/-fsigned-char -fsigned-char/;' CMake/FollyCompilerUnix.cmake
+    cmake . && \
+      make -j $(nproc) && \
+      sudo make install
     cd ..
-    
+fi
+
+if [ "$run" = "fizz" ]; then run=""; fi
+if [ "$run" = "" ]; then
+    git clone https://github.com/facebookincubator/fizz
+    mkdir fizz/build_ && cd fizz/build_
+    add_glog_cmake_dep ../fizz
+    cmake ../fizz
+    make -j $(nproc)
+    sudo make install
+    cd -
+fi
+
+if [ "$run" = "zstd" ]; then run=""; fi
+if [ "$run" = "" ]; then
     git clone https://github.com/facebook/zstd.git
     cd zstd && make && sudo make install && make check && cd ..
+fi
     
+
+if [ "$run" = "wangle" ]; then run=""; fi
+if [ "$run" = "" ]; then
     git clone https://github.com/facebook/wangle.git
     cd wangle/wangle
+    add_glog_cmake_dep .
     cmake .
       make && \
       ctest && \
       sudo make install
-    cd ../..
-    
-    git clone https://github.com/facebook/proxygen.git
-    cd proxygen/proxygen
-    autoreconf -ivf && ./configure && make && sudo make install
     cd ../..
 fi
 
@@ -140,34 +186,14 @@ if [ "$run" = "" ]; then
     cd rsocket-cpp
     mkdir -p build
     cd build
+    add_glog_cmake_dep ..
     # Append '-ldl -levent -lboost_context -ldouble-conversion -lgflags -lboost_regex' after '-fuse-ld=' in CMakeList.txt
     cmake ../
-    make -j
+    make
     # ./tests
     cd ../..
 fi
-
-if [ "$run" = "curl" ]; then run=""; fi
-if [ "$run" = "" ]; then
-    wget https://curl.haxx.se/download/curl-7.59.0.tar.gz
-    tar xvf curl-7.59.0.tar.gz
-    cd curl-7.59.0/
-    cmake .
-    make
-    sudo make install
-    cd ..
-fi
-
-if [ "$run" = "fizz" ]; then run=""; fi
-if [ "$run" = "" ]; then
-    git clone https://github.com/facebookincubator/fizz
-    mkdir fizz/build_ && cd fizz/build_
-    cmake ../fizz
-    make -j $(nproc)
-    sudo make install
-    cd -
-fi
-
+    
 if [ "$run" = "fbthrift" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git clone https://github.com/facebook/fbthrift.git
@@ -182,4 +208,12 @@ if [ "$run" = "" ]; then
     cd fbthrift/thrift/test/py
     python -m test
     cd -
+fi
+
+if [ "$run" = "proxygen" ]; then run=""; fi
+if [ "$run" = "" ]; then
+    git clone https://github.com/facebook/proxygen.git
+    cd proxygen/proxygen
+    autoreconf -ivf && ./configure && make && sudo make install
+    cd ../..
 fi

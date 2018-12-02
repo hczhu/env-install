@@ -220,12 +220,16 @@ if [ "$run" = "" ]; then
     cd fbthrift/thrift/test/py
     python -m test
     cd -
+    # Installed libthrift* and libprotocol, libtransport, and e.t.c.
 fi
 
 if [ "$run" = "proxygen" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/facebook/proxygen.git
     cd proxygen/proxygen
-    autoreconf -ivf && ./configure && make && sudo make install
+    autoreconf -ivf
+    ./configure
+    make
+    sudo make install
     cd ../..
 fi

@@ -56,6 +56,7 @@ npm install google-spreadsheet
 # sudo pip3 install PyMySQL
 
 sudo apt-get install \
+    libncurses-dev \
     libsodium-dev \
     libboost-all-dev \
     libevent-dev \

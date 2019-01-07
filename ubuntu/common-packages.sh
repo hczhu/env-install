@@ -34,6 +34,7 @@ sudo apt-get upgrade pip
 sudo apt-get upgrade pip3.4
 sudo apt-get install gcc
 sudo apt-get upgrade gcc
+sudo apt-get install -y software-properties-common
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
 sudo apt-get install gcc-6 g++-6

@@ -3,7 +3,7 @@
 set -ex
 
 sudo apt-get install ctags
-sudo apt-get install clang-formater
+sudo apt-get install clang-format
 sudo apt-get install clang
 sudo apt-get upgrade g++
 sudo apt-get install octave
@@ -28,10 +28,10 @@ sudo apt-get install\
     libssl-dev\
     pkg-config
 sudo apt-get install     libiberty-dev
-sudo apt-get install hg
-sudo apt-get install Mercurial
-sudo apt-get upgrade pip
-sudo apt-get upgrade pip3.4
+# sudo apt-get install hg
+# sudo apt-get install Mercurial
+# sudo apt-get upgrade pip3
+# sudo apt-get upgrade pip3.4
 sudo apt-get install gcc
 sudo apt-get upgrade gcc
 sudo apt-get install -y software-properties-common
@@ -39,8 +39,8 @@ sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
 sudo apt-get install gcc-6 g++-6
 sudo apt-get install openjdk-8-jdk
-sudo add-apt-repository ppa:webupd8team/java
-sudo apt-get update && sudo apt-get install oracle-java8-installer
+# sudo add-apt-repository ppa:webupd8team/java
+# sudo apt-get update && sudo apt-get install oracle-java8-installer
 # echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list
 # curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
 # sudo apt-get update && sudo apt-get install bazel && sudo apt-get upgrade bazel
@@ -54,9 +54,10 @@ curl -LO https://raw.githubusercontent.com/llvm-mirror/clang/master/tools/clang-
 sudo apt-get install nodejs npm
 npm install google-spreadsheet
 
-sudo pip3 install PyMySQL
+# sudo pip3 install PyMySQL
 
 sudo apt-get install \
+    libncurses-dev \
     libsodium-dev \
     libboost-all-dev \
     libevent-dev \

@@ -155,10 +155,10 @@ if [ "$run" = "" ]; then
     cd folly
 
     # build and install libfolly.so
-    rm -fr CMakeCache.txt
-    cmake configure . -DBUILD_SHARED_LIBS=ON
-    make -j $(nproc)
-    sudo make install
+    # rm -fr CMakeCache.txt
+    # cmake configure . -DBUILD_SHARED_LIBS=ON
+    # make -j $(nproc)
+    # sudo make install
     
     # add -fPIC to CMake/FollyCompilerUnix.cmake
     sed -i 's/-fsigned-char/-fsigned-char -fPIC/;' CMake/FollyCompilerUnix.cmake

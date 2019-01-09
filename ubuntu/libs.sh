@@ -117,6 +117,7 @@ if [ "$run" = "double" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/google/double-conversion.git
     cd double-conversion
+    sudo apt-get install scons
     sudo scons install
     cd ..
 fi

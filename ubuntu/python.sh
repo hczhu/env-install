@@ -16,6 +16,7 @@ sudo apt-get install -y libffi-dev
 sudo apt-get install -y python3-dev
 sudo apt-get install -y python3-setuptools
 sudo apt-get install -y wget
+sudo apt install python3-dev libpython3-dev
 
 # Prepare to build
 mkdir /tmp/Python37

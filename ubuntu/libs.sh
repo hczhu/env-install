@@ -3,6 +3,13 @@
 set -xe
 
 run=$1
+where_to_exit=$2
+
+should_exit() {
+  if [ "$where_to_exit" = "$1" ]; then
+    exit 0
+  fi
+}
 
 function add_glog_cmake_dep() {
   set -xe
@@ -154,20 +161,23 @@ if [ "$run" = "" ]; then
     git_clone https://github.com/facebook/folly.git
     cd folly
 
-    # build and install libfolly.so
-    # rm -fr CMakeCache.txt
-    # cmake configure . -DBUILD_SHARED_LIBS=ON
-    # make -j $(nproc)
-    # sudo make install
-    
     # add -fPIC to CMake/FollyCompilerUnix.cmake
     sed -i 's/-fsigned-char/-fsigned-char -fPIC/;' CMake/FollyCompilerUnix.cmake
+
+    # build and install libfolly.so
+    rm -fr CMakeCache.txt
+    cmake configure . -DBUILD_SHARED_LIBS=ON
+    make -j $(nproc)
+    sudo make install
+    
     rm -fr CMakeCache.txt
     cmake .
     make -j $(nproc)
     sudo make install
 
     cd ..
+
+    should_exit folly
 fi
 
 if [ "$run" = "fizz" ]; then run=""; fi
@@ -235,7 +245,7 @@ fi
 
 if [ "$run" = "proxygen" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    sudo apt-get install gperf
+    sudo apt-get install gperf unzip
     git_clone https://github.com/facebook/proxygen.git
     cd proxygen/proxygen
     autoreconf -ivf

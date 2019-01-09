@@ -235,6 +235,7 @@ fi
 
 if [ "$run" = "proxygen" ]; then run=""; fi
 if [ "$run" = "" ]; then
+    sudo apt-get install gperf
     git_clone https://github.com/facebook/proxygen.git
     cd proxygen/proxygen
     autoreconf -ivf

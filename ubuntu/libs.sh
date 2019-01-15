@@ -39,7 +39,7 @@ echo "try "rm /usr/local/lib/libfolly.so" if there are undefined folly functions
 
 if [ "$run" = "apt" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    sudo apt-get install \
+    yes Y | sudo apt-get install \
         libsodium-dev \
         libboost-all-dev \
         libevent-dev \
@@ -124,7 +124,7 @@ if [ "$run" = "double" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/google/double-conversion.git
     cd double-conversion
-    sudo apt-get install scons
+    curl -fssl https://raw.githubusercontent.com/scontain/install_dependencies/master/install-host-prerequisites.sh | bash
     sudo scons install
     cd ..
 fi
@@ -195,6 +195,7 @@ if [ "$run" = "zstd" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/facebook/zstd.git
     cd zstd && make && sudo make install && make check && cd ..
+    should_exit zstd
 fi
     
 
@@ -241,11 +242,12 @@ if [ "$run" = "" ]; then
     python -m test
     cd -
     # Installed libthrift* and libprotocol, libtransport, and e.t.c.
+    should_exit fbthrift
 fi
 
 if [ "$run" = "proxygen" ]; then run=""; fi
 if [ "$run" = "" ]; then
-    sudo apt-get install gperf unzip
+    yes Y | sudo apt-get install gperf unzip
     git_clone https://github.com/facebook/proxygen.git
     cd proxygen/proxygen
     autoreconf -ivf

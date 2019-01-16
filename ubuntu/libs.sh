@@ -196,7 +196,7 @@ fi
 if [ "$run" = "zstd" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/facebook/zstd.git
-    cd zstd && make && sudo make install && make check && cd ..
+    cd zstd && make && sudo make install && cd ..
     should_exit zstd
 fi
     

@@ -3,6 +3,8 @@
 set -ex
 
 sudo apt-get install ctags
+sudo apt-get install mercurial
+sudo easy_install hg-git
 sudo apt-get install clang-format
 sudo apt-get install clang
 sudo apt-get upgrade g++

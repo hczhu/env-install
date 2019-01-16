@@ -111,7 +111,7 @@ if [ "$run" = "mstch" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/no1msd/mstch.git
     cd mstch
-    mkdir build
+    mkdir build || true
     cd build
     cmake ..
     make
@@ -124,7 +124,8 @@ if [ "$run" = "double" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/google/double-conversion.git
     cd double-conversion
-    curl -fssl https://raw.githubusercontent.com/scontain/install_dependencies/master/install-host-prerequisites.sh | bash
+    curl -fssl https://raw.githubusercontent.com/scontain/install_dependencies/master/install-host-prerequisites.sh > install-scon.sh 
+    sudo bash install-scon.sh
     sudo scons install
     cd ..
 fi
@@ -183,7 +184,8 @@ fi
 if [ "$run" = "fizz" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/facebookincubator/fizz.git
-    mkdir fizz/build_ && cd fizz/build_
+    mkdir fizz/build_ || true
+    cd fizz/build_
     add_glog_cmake_dep ../fizz
     cmake ../fizz
     make -j $(nproc)
@@ -203,7 +205,7 @@ if [ "$run" = "rsocket" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/rsocket/rsocket-cpp.git
     cd rsocket-cpp
-    mkdir -p build
+    mkdir -p build  || true
     cd build
     add_glog_cmake_dep ..
     # Append '-ldl -levent -lboost_context -ldouble-conversion -lgflags -lboost_regex' after '-fuse-ld=' in CMakeList.txt

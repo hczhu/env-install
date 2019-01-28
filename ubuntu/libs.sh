@@ -63,6 +63,17 @@ if [ "$run" = "" ]; then
         libdwarf-dev
 fi
 
+if [ "$run" = "sodim" ]; then run=""; fi
+if [ "$run" = "" ]; then
+  wget https://download.libsodium.org/libsodium/releases/LATEST.tar.gz
+  tar xvf LATEST.tar.gz
+  cd libsodium-stable
+  ./configure
+  make && make check
+  sudo make install
+  rm -fr libsodium-stable
+fi
+
 if [ "$run" = "jemalloc" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/jemalloc/jemalloc.git
@@ -138,6 +149,7 @@ if [ "$run" = "" ]; then
     rm -fr CMakeCache.txt && cmake . -DBUILD_SHARED_LIBS=ON && make && sudo make install
     make clean
     cd ..
+    should_exit gflags
 fi
 
 if [ "$run" = "glog" ]; then run=""; fi

@@ -80,6 +80,7 @@ if [ "$run" = "" ]; then
     cd jemalloc
     ./autogen.sh
     make
+    touch doc/jemalloc.html
     sudo make install
     cd ..
 fi

@@ -81,6 +81,7 @@ if [ "$run" = "" ]; then
     ./autogen.sh
     make
     touch doc/jemalloc.html
+    touch doc/jemalloc.3
     sudo make install
     cd ..
 fi
@@ -245,13 +246,13 @@ if [ "$run" = "fbthrift" ]; then run=""; fi
 if [ "$run" = "" ]; then
     git_clone https://github.com/facebook/fbthrift.git
     root_dir=$PWD
-    cd fbthrift/build
-    add_glog_cmake_dep ..
-    cmake ..
-    cd ../thrift/lib/cpp2/transport/rsocket/
+    cd fbthrift
+    add_glog_cmake_dep .
+    cmake .
+    cd thrift/lib/cpp2/transport/rsocket/
     thrift1 --templates /usr/local/include/thrift/templates -gen py:json,thrift_library -gen mstch_cpp2:enum_strict,frozen2,json -o . Config.thrift
     cd $root_dir
-    cd fbthrift/build
+    cd fbthrift
     make
     sudo make install
     cd -

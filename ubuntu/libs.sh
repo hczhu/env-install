@@ -176,6 +176,16 @@ if [ "$run" = "" ]; then
     git_clone https://github.com/facebook/folly.git
     cd folly
 
+   
+    rm -fr CMakeCache.txt
+    cmake .
+    make -j $(nproc)
+    sudo make install
+
+    should_exit folly
+
+    cd ..
+
     # add -fPIC to CMake/FollyCompilerUnix.cmake
     sed -i 's/-fsigned-char/-fsigned-char -fPIC/;' CMake/FollyCompilerUnix.cmake
 
@@ -184,15 +194,7 @@ if [ "$run" = "" ]; then
     cmake configure . -DBUILD_SHARED_LIBS=ON
     make -j $(nproc)
     sudo make install
-    
-    rm -fr CMakeCache.txt
-    cmake .
-    make -j $(nproc)
-    sudo make install
 
-    cd ..
-
-    should_exit folly
 fi
 
 if [ "$run" = "fizz" ]; then run=""; fi

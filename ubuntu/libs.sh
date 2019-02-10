@@ -117,13 +117,13 @@ fi
 if [ "$run" = "krb" ]; then run=""; fi
 if [ "$run" = "" ]; then
   cd $work_dir
-  wget https://kerberos.org/dist/krb5/1.16/krb5-1.16.tar.gz && \
-  tar xvf krb5-1.16.tar.gz && \
-  cd krb5-1.16/src && \
-  ./configure && \
-  make && \
-  sudo make install && \
-  make clean && \
+  wget https://kerberos.org/dist/krb5/1.16/krb5-1.16.tar.gz
+  tar xvf krb5-1.16.tar.gz
+  cd krb5-1.16/src
+  ./configure
+  make
+  sudo make install
+  make clean
 fi
 
 if [ "$run" = "curl" ]; then run=""; fi
@@ -152,12 +152,18 @@ fi
 
 if [ "$run" = "double" ]; then run=""; fi
 if [ "$run" = "" ]; then
-  cd $work_dir
-  git_clone https://github.com/google/double-conversion.git
-  cd double-conversion
-  curl -fssl https://raw.githubusercontent.com/scontain/install_dependencies/master/install-host-prerequisites.sh > install-scon.sh 
-  sudo bash install-scon.sh
-  sudo scons install
+  if  ! sudo apt-get install -y libdouble-conversion-dev; then
+    if [ ! -e double-conversion ]; then
+      echo "Fetching double-conversion from git (apt-get failed)"
+      cd $work_dir
+      git_clone https://github.com/floitsch/double-conversion.git
+      (
+        cd double-conversion
+        cmake . -DBUILD_SHARED_LIBS=OFF
+        sudo make install
+      )
+    fi
+  fi
 fi
 
 if [ "$run" = "gflags" ]; then run=""; fi
@@ -166,7 +172,7 @@ if [ "$run" = "" ]; then
   git_clone https://github.com/gflags/gflags.git
   cd gflags
   cmake . && make && sudo make install
-  rm -fr CMakeCache.txt && cmake . -DBUILD_SHARED_LIBS=ON && make && sudo make install
+  rm -fr CMakeCache.txt && cmake . -DBUILD_SHARED_LIBS=OFF && make && sudo make install
   make clean
   should_exit gflags
 fi
@@ -177,7 +183,7 @@ if [ "$run" = "" ]; then
   git_clone https://github.com/google/glog.git
   cd glog
   cmake . && make && sudo make install
-  rm -fr CMakeCache.txt && cmake . -DBUILD_SHARED_LIBS=ON && make && sudo make install
+  rm -fr CMakeCache.txt && cmake . -DBUILD_SHARED_LIBS=OFF && make && sudo make install
 fi
 
 if [ "$run" = "gtest" ]; then run=""; fi
@@ -194,9 +200,8 @@ if [ "$run" = "" ]; then
   git_clone https://github.com/facebook/folly.git
   cd folly
 
-   
   rm -fr CMakeCache.txt
-  cmake .
+  cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF
   make -j $(nproc)
   sudo make install
 
@@ -245,10 +250,10 @@ if [ "$run" = "" ]; then
   git_clone https://github.com/facebook/wangle.git
   cd wangle/wangle
   add_glog_cmake_dep .
-  cmake .
-    make
-    # ctest
-    sudo make install
+  cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF
+  make
+  # ctest
+  sudo make install
 fi
   
 if [ "$run" = "fbthrift" ]; then run=""; fi
@@ -258,7 +263,7 @@ if [ "$run" = "" ]; then
   root_dir=$PWD
   cd fbthrift
   add_glog_cmake_dep .
-  cmake .
+  cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF
   cd thrift/lib/cpp2/transport/rsocket/
   thrift1 --templates /usr/local/include/thrift/templates -gen py:json,thrift_library -gen mstch_cpp2:enum_strict,frozen2,json -o . Config.thrift
   cd $root_dir
@@ -268,10 +273,10 @@ if [ "$run" = "" ]; then
   cd -
   cd fbthrift/thrift/lib/py
   sudo python setup.py install
-  cd -
-  cd fbthrift/thrift/test/py
-  python -m test
-  cd -
+#  cd -
+#  cd fbthrift/thrift/test/py
+#  python -m test
+#  cd -
   # Installed libthrift* and libprotocol, libtransport, and e.t.c.
   should_exit fbthrift
 fi

@@ -193,7 +193,7 @@ fi
 if [ "$run" = "gtest" ]; then run=""; fi
 if [ "$run" = "" ]; then
   cd $work_dir
-  git_clone https://github.com/abseil/googletest.git
+  git_clone http://github.com/google/googletest
   cd googletest
   cmake . && make && sudo make install
 fi

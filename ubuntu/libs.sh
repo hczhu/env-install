@@ -7,8 +7,8 @@ where_to_exit=$2
 work_dir=$(pwd -P)
 
 # From https://github.com/facebook/proxygen/tree/master/build/deps/github_hashes/facebook
-folly_rev=df5a0575d95f3c2cc9200b15e40db4af82e1f2eb
-wangel_rev=8065536fb663943e40d55da203ca71c18e91a592
+# folly_rev=df5a0575d95f3c2cc9200b15e40db4af82e1f2eb
+# wangel_rev=8065536fb663943e40d55da203ca71c18e91a592
 
 should_exit() {
   if [ "$where_to_exit" = "$1" ]; then

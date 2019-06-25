@@ -37,7 +37,7 @@ function git_clone() {
       cd $name &&
       git pull &&
       cd ..
-  )
+  ) || true
 }
 
 function build_folly_so() {
@@ -203,7 +203,7 @@ if [ "$run" = "" ]; then
   cd $work_dir
   git_clone https://github.com/facebook/folly.git
   cd folly
-  git checkout ${folly_rev}
+  # git checkout ${folly_rev}
 
   rm -fr CMakeCache.txt
   cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF
@@ -244,7 +244,7 @@ if [ "$run" = "" ]; then
   add_glog_cmake_dep ..
   # Append '-ldl -levent -lboost_context -ldouble-conversion -lgflags -lboost_regex' after '-fuse-ld=' in CMakeList.txt
   cmake ../
-  make
+  make -d
   sudo make install
   # ./tests
 fi
@@ -270,8 +270,8 @@ if [ "$run" = "" ]; then
   cd fbthrift
   add_glog_cmake_dep .
   cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF
-  cd thrift/lib/cpp2/transport/rsocket/
-  thrift1 --templates /usr/local/include/thrift/templates -gen py:json,thrift_library -gen mstch_cpp2:enum_strict,frozen2,json -o . Config.thrift
+  # cd thrift/lib/cpp2/transport/rsocket/
+  # thrift1 --templates /usr/local/include/thrift/templates -gen py:json,thrift_library -gen mstch_cpp2:enum_strict,frozen2,json -o . Config.thrift
   cd $root_dir
   cd fbthrift
   make

@@ -287,6 +287,8 @@ if [ "$run" = "" ]; then
   should_exit fbthrift
 fi
 
+exit 0
+
 if [ "$where_to_exit" = "proxygen" ]; then
   cd $work_dir
   yes Y | sudo apt-get install gperf unzip

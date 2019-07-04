@@ -283,6 +283,7 @@ if [ "$run" = "" ]; then
   cd fbthrift
   add_glog_cmake_dep .
   cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF -DCXX_STD=c++14
+  for f in $(find .); do if grep -q 'gnu++11' $f 2> /dev/null; then sudo sed -i 's/gnu++11/c++14/g' $f; fi;  done
   # cd thrift/lib/cpp2/transport/rsocket/
   # thrift1 --templates /usr/local/include/thrift/templates -gen py:json,thrift_library -gen mstch_cpp2:enum_strict,frozen2,json -o . Config.thrift
   cd $root_dir

@@ -247,6 +247,18 @@ if [ "$run" = "" ]; then
   make -d
   sudo make install
   # ./tests
+  should_exit rsocket
+fi
+
+if [ "$run" = "fmt" ]; then run=""; fi
+if [ "$run" = "" ]; then
+  cd $work_dir
+  git_clone https://github.com/fmtlib/fmt.git
+  cd fmt
+  cmake .
+  make
+  sudo make install
+  should_exit fmt
 fi
 
 if [ "$run" = "wangle" ]; then run=""; fi
@@ -254,12 +266,13 @@ if [ "$run" = "" ]; then
   cd $work_dir
   git_clone https://github.com/facebook/wangle.git
   cd wangle/wangle
-  git checkout ${wangle_rev}
+  # git checkout ${wangle_rev}
   add_glog_cmake_dep .
   cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF
   make
   # ctest
   sudo make install
+  should_exit wangle
 fi
   
 if [ "$run" = "fbthrift" ]; then run=""; fi
@@ -269,7 +282,7 @@ if [ "$run" = "" ]; then
   root_dir=$PWD
   cd fbthrift
   add_glog_cmake_dep .
-  cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF
+  cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF -DCXX_STD=c++14
   # cd thrift/lib/cpp2/transport/rsocket/
   # thrift1 --templates /usr/local/include/thrift/templates -gen py:json,thrift_library -gen mstch_cpp2:enum_strict,frozen2,json -o . Config.thrift
   cd $root_dir

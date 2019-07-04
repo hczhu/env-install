@@ -85,3 +85,5 @@ sudo apt-get install \
     libunwind8-dev \
     libelf-dev \
     libdwarf-dev
+
+sudo apt-get install ripgrep

@@ -86,4 +86,7 @@ sudo apt-get install \
     libelf-dev \
     libdwarf-dev
 
-sudo apt-get install ripgrep
+# sudo apt-get install ripgrep
+
+wget 'https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb'
+sudo apt install ./ripgrep_11.0.1_amd64.deb

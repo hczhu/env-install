@@ -40,3 +40,4 @@ sudo pip3.7 install future six python-dateutil mysqlclient mmh3
 sudo pip3.7 install black
 sudo pip3.7 install pandas
 sudo pip3.7 install lxml
+sudo pip3.7 install sklearn

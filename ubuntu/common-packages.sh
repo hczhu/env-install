@@ -90,3 +90,5 @@ sudo apt-get install \
 
 wget 'https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb'
 sudo apt install ./ripgrep_11.0.1_amd64.deb
+apt-get install -y locales
+sudo locale-gen en_US.UTF-8

@@ -59,7 +59,8 @@ echo "try "rm /usr/local/lib/libfolly.so" if there are undefined folly functions
 
 if [ "$run" = "apt" ]; then run=""; fi
 if [ "$run" = "" ]; then
-  yes Y | sudo apt-get install \
+  yes Y | sudo apt install \
+      krb5-user \
       libsodium-dev \
       libboost-all-dev \
       libevent-dev \
@@ -116,18 +117,6 @@ if [ "$run" = "" ]; then
   ./configure
   make
   sudo make install
-fi
-
-if [ "$run" = "krb" ]; then run=""; fi
-if [ "$run" = "" ]; then
-  cd $work_dir
-  wget https://kerberos.org/dist/krb5/1.16/krb5-1.16.tar.gz
-  tar xvf krb5-1.16.tar.gz
-  cd krb5-1.16/src
-  ./configure
-  make
-  sudo make install
-  make clean
 fi
 
 if [ "$run" = "curl" ]; then run=""; fi

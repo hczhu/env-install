@@ -199,6 +199,7 @@ if [ "$run" = "" ]; then
   make -j $(nproc)
   sudo make install
 
+  rm -fr ${work_dir}/folly
   should_exit folly
 fi
 
@@ -219,6 +220,8 @@ if [ "$run" = "" ]; then
   cd $work_dir
   git_clone https://github.com/facebook/zstd.git
   cd zstd && make && sudo make install && cd ..
+
+  rm -fr ${work_dir}/zstd
   should_exit zstd
 fi
   
@@ -236,6 +239,8 @@ if [ "$run" = "" ]; then
   make -d
   sudo make install
   # ./tests
+
+  rm -fr ${work_dir}/rsocket-cpp
   should_exit rsocket
 fi
 
@@ -247,6 +252,8 @@ if [ "$run" = "" ]; then
   cmake .
   make
   sudo make install
+
+  rm -fr ${work_dir}/fmt
   should_exit fmt
 fi
 
@@ -261,6 +268,7 @@ if [ "$run" = "" ]; then
   make
   # ctest
   sudo make install
+  rm -fr ${work_dir}/wangle
   should_exit wangle
 fi
   
@@ -287,6 +295,7 @@ if [ "$run" = "" ]; then
 #  python -m test
 #  cd -
   # Installed libthrift* and libprotocol, libtransport, and e.t.c.
+  rm -fr ${work_dir}/fbthrift
   should_exit fbthrift
 fi
 

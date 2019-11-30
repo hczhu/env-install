@@ -2,7 +2,7 @@
 
 set -ex
 
-sudo apt-get install ctags
+sudo apt-get install ctags wget
 sudo apt-get install mercurial
 # sudo apt install easy_install
 # sudo easy_install hg-git
@@ -92,3 +92,4 @@ wget 'https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.
 sudo apt install ./ripgrep_11.0.1_amd64.deb
 apt-get install -y locales
 sudo locale-gen en_US.UTF-8
+sudo apt install cloc

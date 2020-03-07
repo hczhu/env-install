@@ -187,6 +187,20 @@ if [ "$run" = "" ]; then
   cmake . && make && sudo make install
 fi
 
+if [ "$run" = "fmt" ]; then run=""; fi
+if [ "$run" = "" ]; then
+  cd $work_dir
+  git_clone https://github.com/fmtlib/fmt.git
+  cd fmt
+  cmake .
+  make
+  sudo make install
+
+  rm -fr ${work_dir}/fmt
+  should_exit fmt
+fi
+
+
 if [ "$run" = "folly" ]; then run=""; fi
 if [ "$run" = "" ]; then
   cd $work_dir
@@ -242,19 +256,6 @@ if [ "$run" = "" ]; then
 
   rm -fr ${work_dir}/rsocket-cpp
   should_exit rsocket
-fi
-
-if [ "$run" = "fmt" ]; then run=""; fi
-if [ "$run" = "" ]; then
-  cd $work_dir
-  git_clone https://github.com/fmtlib/fmt.git
-  cd fmt
-  cmake .
-  make
-  sudo make install
-
-  rm -fr ${work_dir}/fmt
-  should_exit fmt
 fi
 
 if [ "$run" = "wangle" ]; then run=""; fi

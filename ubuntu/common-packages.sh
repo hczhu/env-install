@@ -8,6 +8,7 @@ sudo apt-get install mercurial
 # sudo easy_install hg-git
 sudo apt-get install clang-format
 sudo apt-get install clang
+sudo wget https://raw.githubusercontent.com/llvm-mirror/clang/master/tools/clang-format/clang-format.py -o /usr/local/bin/
 sudo apt-get upgrade g++
 sudo apt-get install octave
 sudo apt-get install\

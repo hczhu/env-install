@@ -286,7 +286,7 @@ if [ "$run" = "" ]; then
   # thrift1 --templates /usr/local/include/thrift/templates -gen py:json,thrift_library -gen mstch_cpp2:enum_strict,frozen2,json -o . Config.thrift
   cd $root_dir
   cd fbthrift
-  make
+  make -j $(nproc)
   sudo make install
   cd -
   cd fbthrift/thrift/lib/py

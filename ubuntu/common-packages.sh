@@ -2,13 +2,15 @@
 
 set -ex
 
-sudo apt-get install ctags wget
+sudo apt-get install exuberant-ctags
+sudo apt-get install wget
 sudo apt-get install mercurial
 # sudo apt install easy_install
 # sudo easy_install hg-git
 sudo apt-get install clang-format
 sudo apt-get install clang
-sudo wget https://raw.githubusercontent.com/llvm-mirror/clang/master/tools/clang-format/clang-format.py -o /usr/local/bin/
+sudo wget https://raw.githubusercontent.com/llvm-mirror/clang/master/tools/clang-format/clang-format.py -o /usr/local/bin/clang-format.py
+
 sudo apt-get upgrade g++
 sudo apt-get install octave
 sudo apt-get install\
@@ -40,9 +42,9 @@ sudo apt-get install     libiberty-dev
 sudo apt-get install -y software-properties-common
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
-sudo apt-get install gcc-8 g++-8
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 10
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 10
+sudo apt-get install gcc-11 g++-11
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 11
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 11
 
 
 sudo apt-get install openjdk-8-jdk
@@ -91,6 +93,6 @@ sudo apt-get install \
 
 wget 'https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb'
 sudo apt install ./ripgrep_11.0.1_amd64.deb
-apt-get install -y locales
+sudo apt-get install -y locales
 sudo locale-gen en_US.UTF-8
 sudo apt install cloc

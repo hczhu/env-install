@@ -2,8 +2,10 @@
 
 set -ex
 
-git clone https://github.com/mysql/mysql-server.git
-mkdir build && cd build
+# git clone https://github.com/mysql/mysql-server.git
+# cd mysql-server
+# mkdir build && cd build
+
 cmake ..
 make
 sudo make install

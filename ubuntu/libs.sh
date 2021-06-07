@@ -7,8 +7,8 @@ where_to_exit=$2
 work_dir=$(pwd -P)
 
 # From https://github.com/facebook/proxygen/tree/master/build/deps/github_hashes/facebook
-# folly_rev=df5a0575d95f3c2cc9200b15e40db4af82e1f2eb
-# wangel_rev=8065536fb663943e40d55da203ca71c18e91a592
+folly_rev=99fbca1df19fdd21f1b831cad6f50ece94573675
+wangel_rev=33d84df82ba2681eb21551346802ec7dc21c7785
 
 should_exit() {
   if [ "$where_to_exit" = "$1" ]; then
@@ -93,7 +93,7 @@ if [ "$run" = "" ]; then
   ./configure
   make && make check
   sudo make install
-  rm -fr libsodium-stable
+  # rm -fr libsodium-stable
 fi
 
 if [ "$run" = "jemalloc" ]; then run=""; fi
@@ -196,7 +196,7 @@ if [ "$run" = "" ]; then
   make
   sudo make install
 
-  rm -fr ${work_dir}/fmt
+  # rm -fr ${work_dir}/fmt
   should_exit fmt
 fi
 
@@ -213,7 +213,7 @@ if [ "$run" = "" ]; then
   make -j $(nproc)
   sudo make install
 
-  rm -fr ${work_dir}/folly
+  # rm -fr ${work_dir}/folly
   should_exit folly
 fi
 
@@ -224,7 +224,7 @@ if [ "$run" = "" ]; then
   mkdir fizz/build_ || true
   cd fizz/build_
   add_glog_cmake_dep ../fizz
-  cmake ../fizz
+  cmake ../fizz -DBUILD_TESTS=OFF
   make -j $(nproc)
   sudo make install
 fi
@@ -235,7 +235,7 @@ if [ "$run" = "" ]; then
   git_clone https://github.com/facebook/zstd.git
   cd zstd && make && sudo make install && cd ..
 
-  rm -fr ${work_dir}/zstd
+  # rm -fr ${work_dir}/zstd
   should_exit zstd
 fi
   
@@ -254,7 +254,7 @@ if [ "$run" = "" ]; then
   sudo make install
   # ./tests
 
-  rm -fr ${work_dir}/rsocket-cpp
+  # rm -fr ${work_dir}/rsocket-cpp
   should_exit rsocket
 fi
 
@@ -269,7 +269,7 @@ if [ "$run" = "" ]; then
   make
   # ctest
   sudo make install
-  rm -fr ${work_dir}/wangle
+  # rm -fr ${work_dir}/wangle
   should_exit wangle
 fi
   
@@ -296,7 +296,7 @@ if [ "$run" = "" ]; then
 #  python -m test
 #  cd -
   # Installed libthrift* and libprotocol, libtransport, and e.t.c.
-  rm -fr ${work_dir}/fbthrift
+  # rm -fr ${work_dir}/fbthrift
   should_exit fbthrift
 fi
 

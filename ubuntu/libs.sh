@@ -2,13 +2,18 @@
 
 set -xe
 
+GNUMAKEFLAGS="-j$(nproc)"
+
 run=$1
 where_to_exit=$2
 work_dir=$(pwd -P)
 
 # From https://github.com/facebook/proxygen/tree/master/build/deps/github_hashes/facebook
-folly_rev=99fbca1df19fdd21f1b831cad6f50ece94573675
 wangel_rev=33d84df82ba2681eb21551346802ec7dc21c7785
+
+good_fbthrift_tag='v2021.04.19.00'
+folly_rev=$(curl -s -k "https://raw.githubusercontent.com/facebook/fbthrift/${good_fbthrift_tag}/build/deps/github_hashes/facebook/folly-rev.txt" | awk '{ print $3 } ')
+wangle_rev=$(curl -s -k "https://raw.githubusercontent.com/facebook/fbthrift/${good_fbthrift_tag}/build/deps/github_hashes/facebook/wangle-rev.txt" | awk '{ print $3 } ')
 
 should_exit() {
   if [ "$where_to_exit" = "$1" ]; then
@@ -192,6 +197,7 @@ if [ "$run" = "" ]; then
   cd $work_dir
   git_clone https://github.com/fmtlib/fmt.git
   cd fmt
+  git checkout ${good_fbthrift_tag} || true
   cmake .
   make
   sudo make install
@@ -206,7 +212,7 @@ if [ "$run" = "" ]; then
   cd $work_dir
   git_clone https://github.com/facebook/folly.git
   cd folly
-  # git checkout ${folly_rev}
+  git checkout ${folly_rev}
 
   rm -fr CMakeCache.txt
   cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF
@@ -221,11 +227,14 @@ if [ "$run" = "fizz" ]; then run=""; fi
 if [ "$run" = "" ]; then
   cd $work_dir
   git_clone https://github.com/facebookincubator/fizz.git
-  mkdir fizz/build_ || true
-  cd fizz/build_
+  cd fizz
+  git checkout ${good_fbthrift_tag} || true
+
+  mkdir build_ || true
+  cd build_
   add_glog_cmake_dep ../fizz
   cmake ../fizz -DBUILD_TESTS=OFF
-  make -j $(nproc)
+  make
   sudo make install
 fi
 
@@ -233,7 +242,9 @@ if [ "$run" = "zstd" ]; then run=""; fi
 if [ "$run" = "" ]; then
   cd $work_dir
   git_clone https://github.com/facebook/zstd.git
-  cd zstd && make && sudo make install && cd ..
+  cd zstd
+  git checkout ${good_fbthrift_tag} || true
+  make && sudo make install && cd ..
 
   # rm -fr ${work_dir}/zstd
   should_exit zstd
@@ -245,6 +256,8 @@ if [ "$run" = "" ]; then
   cd $work_dir
   git_clone https://github.com/rsocket/rsocket-cpp.git
   cd rsocket-cpp
+  git checkout ${good_fbthrift_tag} || true
+
   mkdir -p build  || true
   cd build
   add_glog_cmake_dep ..
@@ -263,7 +276,7 @@ if [ "$run" = "" ]; then
   cd $work_dir
   git_clone https://github.com/facebook/wangle.git
   cd wangle/wangle
-  # git checkout ${wangle_rev}
+  git checkout ${wangle_rev}
   add_glog_cmake_dep .
   cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF
   make
@@ -279,6 +292,7 @@ if [ "$run" = "" ]; then
   git_clone https://github.com/facebook/fbthrift.git
   root_dir=$PWD
   cd fbthrift
+  git co ${good_fbthrift_tag}
   add_glog_cmake_dep .
   cmake configure . -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITIOFF_INDEPENDENT_CODE=OFF -DCXX_STD=c++14
   for f in $(find .); do if grep -q 'gnu++11' $f 2> /dev/null; then sudo sed -i 's/gnu++11/c++14/g' $f; fi;  done
